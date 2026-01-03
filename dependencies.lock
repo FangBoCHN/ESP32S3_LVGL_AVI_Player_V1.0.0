@@ -1,0 +1,103 @@
+dependencies:
+  atanisoft/esp_lcd_ili9488:
+    component_hash: 45d4c19647801a7000f9106b39127576fb58bd623fb13c1453071190c6f0b8e3
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=4.4.2'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.1.0
+  atanisoft/esp_lcd_touch_xpt2046:
+    component_hash: 7e6381b67b6e487379118368b8e91624dc87036ef5734818de1db9eb35697998
+    dependencies:
+    - name: espressif/esp_lcd_touch
+      registry_url: https://components.espressif.com
+      require: private
+      version: '>=1.0.4'
+    - name: idf
+      require: private
+      version: '>=4.4'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.0.6
+  espressif/esp_lcd_touch:
+    component_hash: 3f85a7d95af876f1a6ecca8eb90a81614890d0f03a038390804e5a77e2caf862
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=4.4.2'
+    source:
+      registry_url: https://components.espressif.com
+      type: service
+    version: 1.2.1
+  espressif/esp_lvgl_adapter:
+    component_hash: 6d140bc0168a8a9727e59e6270fdb0dafaabc6f7a4dfbf7f02863bc43118375c
+    dependencies:
+    - name: espressif/button
+      registry_url: https://components.espressif.com
+      require: public
+      rules:
+      - if: $CONFIG{ESP_LVGL_ADAPTER_ENABLE_BUTTON} == True
+      version: 4.*
+    - name: espressif/esp_lcd_touch
+      registry_url: https://components.espressif.com
+      require: public
+      version: 1.*
+    - name: espressif/esp_lv_decoder
+      registry_url: https://components.espressif.com
+      require: public
+      rules:
+      - if: $CONFIG{ESP_LVGL_ADAPTER_ENABLE_DECODER} == True
+      version: 0.*
+    - name: espressif/esp_lv_fs
+      registry_url: https://components.espressif.com
+      require: public
+      rules:
+      - if: $CONFIG{ESP_LVGL_ADAPTER_ENABLE_FS} == True
+      version: 1.*
+    - name: espressif/freetype
+      registry_url: https://components.espressif.com
+      require: public
+      rules:
+      - if: $CONFIG{ESP_LVGL_ADAPTER_ENABLE_FREETYPE} == True
+      version: 2.*
+    - name: espressif/knob
+      registry_url: https://components.espressif.com
+      require: public
+      rules:
+      - if: $CONFIG{ESP_LVGL_ADAPTER_ENABLE_KNOB} == True
+      version: 1.*
+    - name: idf
+      require: private
+      version: '>=5.5'
+    - name: lvgl/lvgl
+      registry_url: https://components.espressif.com
+      require: private
+      version: '>=8,<10'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 0.2.0
+  idf:
+    source:
+      type: idf
+    version: 5.5.2
+  lvgl/lvgl:
+    component_hash: 948bff879a345149b83065535bbc4a026ce9f47498a22881e432a264b9098015
+    dependencies: []
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 8.3.11
+direct_dependencies:
+- atanisoft/esp_lcd_ili9488
+- atanisoft/esp_lcd_touch_xpt2046
+- espressif/esp_lvgl_adapter
+- idf
+- lvgl/lvgl
+manifest_hash: 9e7be7fc6b44a08248f13a5c41e5a7c141b69a465c97c372a1033fc4dda5b605
+target: esp32s3
+version: 2.0.0

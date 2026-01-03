@@ -1,0 +1,14 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.openOcdConfigs": [
+    "board/esp32s3-builtin.cfg"
+  ],
+  "idf.portWin": "COM5",
+  "idf.currentSetup": "E:/ESPIDF/ESPIDF_V5.5.2/Espressif/frameworks/esp-idf-v5.5.2/",
+  "idf.customExtraVars": {
+    "OPENOCD_SCRIPTS": "e:\\ESPIDF_V4\\Espressif\\tools\\openocd-esp32\\v0.12.0-esp32-20230419/openocd-esp32/share/openocd/scripts",
+    "IDF_CCACHE_ENABLE": "1",
+    "IDF_TARGET": "esp32s3"
+  },
+  "idf.flashType": "UART"
+}

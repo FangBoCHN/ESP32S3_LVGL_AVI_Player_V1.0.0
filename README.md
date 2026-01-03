@@ -1,0 +1,2 @@
+# ESP32S3_LVGL_AVI_Player_V1.0.0
+IDF5.5.2+SPI
