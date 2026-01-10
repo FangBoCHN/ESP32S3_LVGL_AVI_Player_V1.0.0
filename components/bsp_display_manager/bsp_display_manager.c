@@ -16,9 +16,10 @@ static const char *TAG = "BSP_DISP";
 #define DISPLAY_H_RES              480
 #define DISPLAY_V_RES              320
 #define LVGL_BUFFER_HEIGHT         80
-#define DISPLAY_REFRESH_HZ         40000000
+#define DISPLAY_REFRESH_HZ         60000000
 #define SPI_MAX_TRANSFER_SIZE      32768
-#define COLOR_CONV_BUF_SIZE        (480 * 32 * 2)
+// 修复内存越界：由于bits_per_pixel = 18，颜色转换缓冲区从2字节（RGB565)/像素扩容至3字节/像素 
+#define COLOR_CONV_BUF_SIZE        480 * 320/4
 
 // 引脚宏定义
 #if CONFIG_IDF_TARGET_ESP32S3
@@ -85,14 +86,16 @@ esp_err_t bsp_display_init(lv_disp_t **disp_out) {
         .cs_gpio_num = TFT_CS, 
         .dc_gpio_num = TFT_DC, 
         .pclk_hz = DISPLAY_REFRESH_HZ,
-        .trans_queue_depth = 10, 
+        .trans_queue_depth = 20, 
         .lcd_cmd_bits = 8, 
         .lcd_param_bits = 8
     };
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)SPI2_HOST, &io_config, &lcd_io_handle));
 
     const esp_lcd_panel_dev_config_t lcd_config = {
-        .reset_gpio_num = TFT_RESET, .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_BGR, .bits_per_pixel = 18,
+        .reset_gpio_num = TFT_RESET, 
+        .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_BGR, 
+        .bits_per_pixel = 18,
     };
     ESP_ERROR_CHECK(esp_lcd_new_panel_ili9488(lcd_io_handle, &lcd_config, COLOR_CONV_BUF_SIZE, &lcd_handle));
     esp_lcd_panel_reset(lcd_handle);
@@ -107,8 +110,15 @@ esp_err_t bsp_display_init(lv_disp_t **disp_out) {
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)SPI2_HOST, &tp_io_config, &tp_io_handle));
 
     esp_lcd_touch_config_t tp_cfg = {
-        .x_max = DISPLAY_H_RES, .y_max = DISPLAY_V_RES, .rst_gpio_num = -1, .int_gpio_num = TOUCH_IRQ_PIN,
-        .flags = { .swap_xy = 1, .mirror_x = 0, .mirror_y = 1 },
+        .x_max = DISPLAY_H_RES, 
+        .y_max = DISPLAY_V_RES, 
+        .rst_gpio_num = -1, 
+        .int_gpio_num = TOUCH_IRQ_PIN,
+        .flags = { 
+            .swap_xy = 1, 
+            .mirror_x = 0, 
+            .mirror_y = 1
+        },
     };
     ESP_ERROR_CHECK(esp_lcd_touch_new_spi_xpt2046(tp_io_handle, &tp_cfg, &tp_handle));
 
@@ -118,7 +128,11 @@ esp_err_t bsp_display_init(lv_disp_t **disp_out) {
     ESP_ERROR_CHECK(esp_lv_adapter_init(&adapter_cfg));
 
     esp_lv_adapter_display_config_t disp_cfg = ESP_LV_ADAPTER_DISPLAY_SPI_WITH_PSRAM_DEFAULT_CONFIG(
-        lcd_handle, lcd_io_handle, DISPLAY_H_RES, DISPLAY_V_RES, ESP_LV_ADAPTER_ROTATE_0
+        lcd_handle, 
+        lcd_io_handle, 
+        DISPLAY_H_RES, 
+        DISPLAY_V_RES, 
+        ESP_LV_ADAPTER_ROTATE_0
     );
     disp_cfg.profile.buffer_height = LVGL_BUFFER_HEIGHT;
     *disp_out = esp_lv_adapter_register_display(&disp_cfg);
