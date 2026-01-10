@@ -15,10 +15,11 @@ static const char *TAG = "BSP_DISP";
 // 硬件常量
 #define DISPLAY_H_RES              480
 #define DISPLAY_V_RES              320
-#define LVGL_BUFFER_HEIGHT         80
 #define DISPLAY_REFRESH_HZ         60000000
 #define SPI_MAX_TRANSFER_SIZE      32768
-// 修复内存越界：由于bits_per_pixel = 18，颜色转换缓冲区从2字节（RGB565)/像素扩容至3字节/像素 
+// 修复内存越界：COLOR_CONV_BUF_SIZE配置为480 * 25（或480 * 25*3），但LVGL缓冲区高度设置为80行
+//当LVGL尝试发送80行像素数据时，颜色转换缓冲区（仅25行）太小，导致内存越界访问
+#define LVGL_BUFFER_HEIGHT         80
 #define COLOR_CONV_BUF_SIZE        480 * 320/4
 
 // 引脚宏定义
